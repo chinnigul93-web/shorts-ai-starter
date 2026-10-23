@@ -1,25 +1,17 @@
 
-name: Shorts AI Trend Scanner
+name: YouTube Shorts Trend Scanner
 
 on:
   workflow_dispatch:
   schedule:
-    # Toshkent vaqti bilan 09:00 va 15:00
-    - cron: "0 4,10 * * *"
-
-permissions:
-  contents: read
+    - cron: "0 */12 * * *"
 
 jobs:
-  trends:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    env:
-      TREND_GEO: UZ
 
     steps:
-      - name: Repositoryni yuklash
+      - name: Kodni yuklash
         uses: actions/checkout@v4
 
       - name: Python sozlash
@@ -27,7 +19,7 @@ jobs:
         with:
           python-version: "3.12"
 
-     - name: Trendlarni topish
+      - name: Trendlarni topish
         run: python trend_scanner.py
 
       - name: Shorts ssenariylarini yaratish
@@ -39,4 +31,4 @@ jobs:
           name: trend-report
           path: output/
           retention-days: 7
- 
+          if-no-files-found: error
