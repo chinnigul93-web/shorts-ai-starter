@@ -1,0 +1,39 @@
+
+name: Shorts AI Trend Scanner
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Toshkent vaqti bilan 09:00 va 15:00
+    - cron: "0 4,10 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  trends:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    env:
+      TREND_GEO: UZ
+
+    steps:
+      - name: Repositoryni yuklash
+        uses: actions/checkout@v4
+
+      - name: Python sozlash
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Trendlarni topish
+        run: python trend_scanner.py
+
+      - name: Hisobotni saqlash
+        uses: actions/upload-artifact@v4
+        with:
+          name: trend-report
+          path: output/
+          retention-days: 7
+ 
